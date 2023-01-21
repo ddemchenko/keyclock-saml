@@ -1,0 +1,45 @@
+server:
+  port: 8083
+
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay
+      routes:
+        - id: product-resource-server
+          uri: http://backend-resources:8082
+          predicates:
+            - Path=/product/**
+        - id: orders-resource-server
+          uri: http://backend-resources:8082
+          predicates:
+            - Path=/orders/**
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway:
+            provider: omg-provider
+            client-id: omgsaml-client
+            client-secret: E0eYBbRgdVHbL4fi1upoq0ySpC3CLxtW
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://backend-gateway-client:8083/login/oauth2/code/gateway"
+            scope: openid
+        provider:
+          omg-provider:
+            issuer-uri: http://backend-auth:8080/realms/OMGSAML
+
+# Enable these to debug the Authorization flow
+logging:
+    level:
+      org:
+        springframework:
+          security:
+            web: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

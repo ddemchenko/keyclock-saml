@@ -1,0 +1,15 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://backend-auth:8080/realms/OMGSAML/protocol/openid-connect/certs
+
+server:
+  port: 8082
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

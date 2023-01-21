@@ -1,0 +1,32 @@
+version: '3'
+services:
+
+  # Backing Services
+  omg-postgres:
+    image: "postgres:14.4"
+    container_name: "omg-postgres"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+
+  omg-keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: "omg-keycloak"
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=user
+      - KEYCLOAK_ADMIN_PASSWORD=password
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://omg-postgres:5432/
+      - KC_DB_USERNAME=user
+      - KC_DB_PASSWORD=password
+      - KC_HOSTNAME=backend-auth
+    ports:
+      - "8080:8080"
+    depends_on:
+      - omg-postgres
+
+
+
